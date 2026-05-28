@@ -3,190 +3,337 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>测测你应对事情的方式</title>
+<title>遇事心态自测</title>
+<!-- 引入雷达图依赖 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    *{box-sizing:border-box}
+    *{box-sizing:border-box;margin:0;padding:0;}
     body{
         font-family:"微软雅黑",sans-serif;
-        margin:0;
         background:linear-gradient(120deg,#fef5ff,#e8f4ff);
         color:#333;
         line-height:1.8;
+        padding-bottom:50px;
     }
     .page{
         display:none;
         min-height:100vh;
         padding:30px 20px;
-        max-width:720px;
+        max-width:800px;
         margin:0 auto;
     }
     .page.active{display:block}
+
+    /* 引言页样式 */
     .intro-card{
         background:#fff;
-        border-radius:20px;
-        padding:50px 30px;
-        box-shadow:0 8px 20px #00000015;
+        border-radius:24px;
+        padding:50px 35px;
+        box-shadow:0 8px 30px rgba(0,0,0,0.08);
         text-align:center;
+        margin-top:20px;
     }
     .intro-card h1{
-        font-size:30px;
+        font-size:32px;
         color:#804fc1;
-        margin-bottom:20px;
+        margin-bottom:25px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+    }
+    .intro-card h1::before, .intro-card h1::after{
+        content:"✨";
+        font-size:24px;
     }
     .intro-card p{
         font-size:17px;
         color:#555;
-        margin:12px 0;
+        margin:15px 0;
+        line-height:1.8;
+    }
+    .intro-card .small-tip{
+        font-size:12px;
+        color:#999;
+        margin-top:30px;
+        padding-top:15px;
+        border-top:1px solid #eee;
     }
     .btn{
-        background:#804fc1;
+        background:linear-gradient(135deg,#804fc1,#9c6ed8);
         color:white;
         border:none;
-        padding:15px 35px;
+        padding:16px 40px;
         border-radius:50px;
         font-size:17px;
         cursor:pointer;
         margin-top:30px;
         transition:all 0.3s;
+        box-shadow:0 4px 15px rgba(128,79,193,0.3);
     }
     .btn:hover{
-        background:#6b3fa8;
         transform:translateY(-2px);
+        box-shadow:0 6px 20px rgba(128,79,193,0.4);
+    }
+
+    /* 答题页 */
+    .q-header{
+        text-align:center;
+        margin-bottom:30px;
+    }
+    .q-header h2{
+        color:#804fc1;
+        font-size:22px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+    }
+    .q-header h2::before{
+        content:"📝";
+        font-size:20px;
+    }
+    .q-header p{
+        color:#666;
+        margin-top:10px;
     }
     .q-card{
         background:white;
-        border-radius:16px;
-        padding:22px;
-        margin-bottom:18px;
-        box-shadow:0 4px 12px #00000010;
+        border-radius:18px;
+        padding:25px;
+        margin-bottom:20px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.05);
+        transition:all 0.2s;
+    }
+    .q-card:hover{
+        box-shadow:0 6px 20px rgba(0,0,0,0.08);
     }
     .q-text{
         font-size:16px;
         color:#222;
+        line-height:1.7;
     }
     .opts{
         display:flex;
         justify-content:space-between;
-        margin-top:15px;
-        gap:6px;
+        margin-top:18px;
+        gap:8px;
         flex-wrap:wrap;
     }
     .opts label{
         background:#f3f0ff;
-        padding:9px 12px;
-        border-radius:8px;
+        padding:10px 15px;
+        border-radius:10px;
         cursor:pointer;
         font-size:15px;
+        flex:1;
+        text-align:center;
+        transition:all 0.2s;
     }
     .opts input{display:none}
     .opts input:checked+label{
         background:#804fc1;
         color:white;
     }
+
+    /* 结果页 */
     .res-card{
         background:white;
-        border-radius:20px;
-        padding:35px;
-        box-shadow:0 8px 20px #00000015;
+        border-radius:24px;
+        padding:40px 35px;
+        box-shadow:0 8px 30px rgba(0,0,0,0.08);
+        margin-top:20px;
     }
+    /* 核心结果样式 */
     .main-result{
         background:linear-gradient(135deg,#804fc1,#a878e4);
         color:#fff;
-        padding:25px;
-        border-radius:16px;
+        padding:30px;
+        border-radius:20px;
         text-align:center;
-        margin-bottom:25px;
+        margin-bottom:30px;
+        box-shadow:0 6px 20px rgba(128,79,193,0.2);
     }
-    .main-title{font-size:18px;opacity:0.9}
-    .main-style{font-size:32px;font-weight:bold;margin:10px 0}
+    .main-title{
+        font-size:19px;
+        opacity:0.9;
+        margin-bottom:10px;
+    }
+    .main-style{
+        font-size:36px;
+        font-weight:bold;
+        margin:10px 0;
+    }
+    .main-tag{
+        display:inline-block;
+        background:rgba(255,255,255,0.2);
+        padding:5px 15px;
+        border-radius:20px;
+        font-size:14px;
+        margin-top:8px;
+    }
+
+    /* 雷达图容器 */
+    .radar-container{
+        background:#f9f5ff;
+        padding:25px;
+        border-radius:18px;
+        margin:30px 0;
+        text-align:center;
+    }
+    .radar-container h3{
+        color:#804fc1;
+        margin-bottom:20px;
+        font-size:18px;
+    }
+    #radarChart{
+        max-width:100%;
+        height:400px;
+        margin:0 auto;
+    }
+
     .dim{
         background:#f9f5ff;
-        padding:15px;
-        border-radius:12px;
-        margin:12px 0;
+        padding:18px;
+        border-radius:15px;
+        margin:15px 0;
         font-size:16px;
+        display:flex;
+        align-items:center;
+        gap:10px;
+    }
+    .dim::before{
+        content:"📊";
+        font-size:18px;
+    }
+
+    /* 丰富解读 */
+    .rich-desc{
+        background:#f8f4ff;
+        padding:25px;
+        border-radius:18px;
+        margin:25px 0;
+        line-height:1.9;
+        border-left:4px solid #804fc1;
+    }
+    .rich-desc strong{
+        color:#804fc1;
+        font-size:18px;
+        display:block;
+        margin-bottom:15px;
+    }
+
+    /* 其他应对方式 */
+    .other-style-title{
+        color:#804fc1;
+        margin:40px 0 20px;
+        font-size:20px;
+        display:flex;
+        align-items:center;
+        gap:8px;
+    }
+    .other-style-title::before{
+        content:"📚";
+        font-size:18px;
     }
     .hover-item{
         position:relative;
         background:#f3f0ff;
-        padding:14px 16px;
-        border-radius:12px;
-        margin:12px 0;
+        padding:18px 20px;
+        border-radius:15px;
+        margin:15px 0;
         cursor:pointer;
         font-size:16px;
         color:#333;
+        transition:all 0.2s;
+    }
+    .hover-item:hover{
+        box-shadow:0 4px 15px rgba(0,0,0,0.05);
     }
     .hover-desc{
         display:none;
         position:absolute;
         left:105%;
         top:0;
-        width:320px;
+        width:350px;
         background:#fff;
         color:#333;
         border:1px solid #eee;
-        padding:18px;
-        border-radius:12px;
+        padding:20px;
+        border-radius:15px;
         z-index:999;
-        box-shadow:0 4px 20px rgba(0,0,0,0.15);
+        box-shadow:0 6px 20px rgba(0,0,0,0.1);
+        line-height:1.7;
     }
     .hover-item:hover .hover-desc{display:block}
-    h3{
-        color:#804fc1;
-        margin:30px 0 15px;
-        font-size:19px;
-    }
-    hr{border:0;height:1px;background:#eee;margin:25px 0}
-    .rich-desc{
-        background:#f8f4ff;
-        padding:20px;
-        border-radius:12px;
-        margin:20px 0;
-        line-height:1.9;
+
+    hr{
+        border:0;
+        height:1px;
+        background:#eee;
+        margin:30px 0;
     }
 </style>
 </head>
 <body>
 
-<!-- 引言页 -->
+<!-- 页面1：引言页 -->
 <div id="page1" class="page active">
     <div class="intro-card">
-        <h1>✨ 测测你应对事情的方式 ✨</h1>
+        <h1>遇事心态自测</h1>
         <p>遇到压力、挫折或烦心事时，你习惯如何面对？</p>
         <p>有的人越挫越勇，有的人容易内耗纠结。</p>
-        <p>这份测试将精准分析你的思维习惯与情绪应对风格。</p>
+        <p>这份测试将精准分析你遇到挫折时的思维习惯与情绪应对风格。</p>
         <p>共 18 题｜约 3 分钟完成｜结果仅供个人参考</p>
+        <div class="small-tip">本测试采用CERQ-SF心理学量表，用科学的方式测量个体在遭遇负性生活事件时所采用的认知型情绪调节策略</div>
         <button class="btn" onclick="goPage(2)">开始测试 →</button>
     </div>
 </div>
 
-<!-- 答题页 -->
+<!-- 页面2：答题页 -->
 <div id="page2" class="page">
-    <h2 style="color:#804fc1;text-align:center;">请根据你的真实想法作答</h2>
-    <p style="text-align:center;color:#666;margin-bottom:25px;">1=完全不符合  5=完全符合</p>
+    <div class="q-header">
+        <h2>请根据你的真实想法作答</h2>
+        <p>1=完全不符合  2=比较不符合  3=一般  4=比较符合  5=完全符合</p>
+    </div>
     <div id="questions"></div>
     <button class="btn" onclick="calcResult()">提交并查看结果</button>
 </div>
 
-<!-- 结果页 -->
+<!-- 页面3：结果页 -->
 <div id="page3" class="page">
     <div class="res-card">
+        <!-- 核心结果 -->
         <div class="main-result">
             <div class="main-title">你最惯用的情绪应对方式</div>
             <div class="main-style" id="topStyleShow"></div>
-            <div id="mainTypeShow"></div>
+            <div class="main-tag" id="mainTypeShow"></div>
         </div>
+
+        <!-- 基础数据 -->
         <div class="dim"><strong>整体调节风格：</strong><span id="totalType"></span></div>
         <div class="dim"><strong>积极性策略总分：</strong><span id="posScore"></span></div>
         <div class="dim"><strong>消极性策略总分：</strong><span id="negScore"></span></div>
+
+        <!-- 雷达图 -->
+        <div class="radar-container">
+            <h3>你的情绪调节维度总览</h3>
+            <canvas id="radarChart"></canvas>
+        </div>
+
+        <!-- 专属丰富解读 -->
         <div id="richExplain" class="rich-desc"></div>
+
         <hr>
-        <h3>其他应对方式（共九种）</h3>
+
+        <!-- 其他应对方式 -->
+        <h3 class="other-style-title">其他应对方式（共九种）</h3>
         <div id="allStyleList"></div>
     </div>
 </div>
 
 <script>
+// 题目列表
 const items=[
     "我认为自己应该对所发生的事负责。",
     "总体而言，我认为结果是由我造成的。",
@@ -208,6 +355,7 @@ const items=[
     "总体而言，我认为结果是他人导致的。"
 ];
 
+// 维度信息（严格区分：专属解读=丰富版，其他应对里的接纳=简单版）
 const dimInfo = [
     {
         name:"自我责备",type:"消极性",
@@ -216,7 +364,7 @@ const dimInfo = [
     },{
         name:"接纳",type:"积极性",
         simple:"能够坦然接受现实，情绪稳定，不抗拒已发生的事。",
-        rich:"你情绪稳定性非常高，面对挫折能平静接受，不抗拒、不崩溃。你心态成熟、包容度高，遇事冷静不情绪化，是人群中最沉稳的人。建议：接纳现实后再多一点主动改变，生活会更从容。"
+        rich:"✨ 你的情绪稳定性堪称「天花板」<br><br>面对挫折、遗憾、不如意，你从不会疯狂抗拒或崩溃逃避，而是能以成熟的心态平静接受事实。你深知「木已成舟」的道理，与其纠结内耗，不如坦然接纳，这种特质让你比80%的人都更不容易焦虑。<br><br>🌰 场景例子：工作出错被批评，别人会陷入自责或抱怨，但你会先接受「已经做错」的事实，再冷静想办法补救，不会被情绪裹挟。<br><br>💡 专属建议：你的接纳力是非常珍贵的优势，但接纳不代表躺平。可以在接受现实的基础上，多一点主动改变的行动力，你的生活状态会更从容、更有掌控感。"
     },{
         name:"反刍",type:"消极性",
         simple:"反复回想不愉快细节，容易钻牛角尖、陷入内耗。",
@@ -248,47 +396,143 @@ const dimInfo = [
     }
 ];
 
+// 渲染题目
 const qEl=document.getElementById("questions");
 items.forEach((txt,i)=>{
     const card=document.createElement("div");
     card.className="q-card";
-    card.innerHTML=`<div class="q-text">${i+1}. ${txt}</div><div class="opts">${[1,2,3,4,5].map(n=>`<input type="radio" name="q${i}" value="${n}" id="q${i}${n}"><label for="q${i}${n}">${n}</label>`).join("")}</div>`;
+    card.innerHTML=`
+        <div class="q-text">${i+1}. ${txt}</div>
+        <div class="opts">
+            ${[1,2,3,4,5].map(n=>`
+                <input type="radio" name="q${i}" value="${n}" id="q${i}${n}">
+                <label for="q${i}${n}">${n}</label>
+            `).join("")}
+        </div>
+    `;
     qEl.appendChild(card);
 });
 
+// 页面跳转
 function goPage(n){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById("page"+n).classList.add("active");
 }
 
+// 计算结果 + 生成雷达图
 function calcResult(){
     let totalPos=0,totalNeg=0;
+    // 初始化分数
     dimInfo.forEach(d=>d.score=0);
+
+    // 读取每题分数
     for(let i=0;i<18;i++){
         const v=document.querySelector(`input[name="q${i}"]:checked`)?.value;
         if(!v)return alert("请完成所有题目！");
-        dimInfo[Math.floor(i/2)].score+=parseInt(v);
+        const dIndex=Math.floor(i/2);
+        dimInfo[dIndex].score+=parseInt(v);
     }
-    dimInfo.forEach(d=>d.type==="积极性"?totalPos+=d.score:totalNeg+=d.score);
+
+    // 计算总分
+    dimInfo.forEach(d=>{
+        if(d.type==="积极性") totalPos+=d.score;
+        else totalNeg+=d.score;
+    });
+
+    // 找到最高分主导风格
     const topDim=dimInfo.reduce((a,b)=>a.score>b.score?a:b);
-    const topIndex=dimInfo.findIndex(x=>x.name===topDim.name);
-    
-    document.getElementById("topStyleShow").innerText=topDim.name;
-    document.getElementById("mainTypeShow").innerText=topDim.type+"主导";
-    document.getElementById("totalType").innerText=totalPos>totalNeg?"积极性为主，情绪调节能力良好":"消极性为主，容易产生情绪内耗";
-    document.getElementById("posScore").innerText=totalPos;
-    document.getElementById("negScore").innerText=totalNeg;
-    document.getElementById("richExplain").innerHTML=`<strong>📝 专属深度解读</strong><br><br>${topDim.rich}`;
-    
-    let listHtml="";
+    const topIndex = dimInfo.findIndex(x=>x.name===topDim.name);
+
+    // 填充顶部重点结果
+    document.getElementById("topStyleShow").innerText = topDim.name;
+    document.getElementById("mainTypeShow").innerText = topDim.type+"主导";
+
+    // 总分展示
+    document.getElementById("totalType").innerText = totalPos>totalNeg 
+        ? "积极性为主，情绪调节能力良好，抗压能力强" 
+        : "消极性为主，容易产生情绪内耗，需注意调节";
+    document.getElementById("posScore").innerText = totalPos;
+    document.getElementById("negScore").innerText = totalNeg;
+
+    // 专属丰富解读（只显示接纳的丰富版）
+    document.getElementById("richExplain").innerHTML = `<strong>📝 专属深度解读</strong>${topDim.rich}`;
+
+    // 渲染所有其他风格：所有都显示简单版（包括接纳）
+    let listHtml = "";
     dimInfo.forEach((item,idx)=>{
-        if(idx===topIndex){
-            listHtml+=`<div class="hover-item">${item.name}（${item.type}）<div style="background:#f8f4ff;padding:15px;border-radius:10px;margin-top:10px;">${item.rich}</div></div>`;
-        }else{
-            listHtml+=`<div class="hover-item">${item.name}（${item.type}）<div class="hover-desc">${item.simple}</div></div>`;
+        listHtml += `
+        <div class="hover-item">
+            ${item.name}（${item.type}）
+            <div class="hover-desc">${item.simple}</div>
+        </div>
+        `;
+    });
+    document.getElementById("allStyleList").innerHTML = listHtml;
+
+    // 生成雷达图（参考MBTI测试的视觉效果）
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    // 销毁已有图表避免重复渲染
+    if(window.radarChartInstance) window.radarChartInstance.destroy();
+    
+    window.radarChartInstance = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: dimInfo.map(d=>d.name),
+            datasets: [{
+                label: '你的得分（满分10分）',
+                data: dimInfo.map(d=>d.score),
+                backgroundColor: 'rgba(128, 79, 193, 0.2)',
+                borderColor: 'rgba(128, 79, 193, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: '#804fc1',
+                pointRadius: 4
+            },{
+                label: '平均水平',
+                data: Array(9).fill(5),
+                backgroundColor: 'rgba(150, 150, 150, 0.1)',
+                borderColor: 'rgba(150, 150, 150, 0.5)',
+                borderWidth: 1,
+                pointBackgroundColor: '#999',
+                pointRadius: 2,
+                borderDash: [5,5]
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    angleLines: {color: 'rgba(0,0,0,0.1)'},
+                    grid: {color: 'rgba(0,0,0,0.1)'},
+                    pointLabels: {
+                        font: {size: 12, family: "微软雅黑"},
+                        color: '#333'
+                    },
+                    ticks: {
+                        stepSize: 2,
+                        max: 10,
+                        min: 0,
+                        color: '#666'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {family: "微软雅黑"}
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.raw + '分';
+                        }
+                    }
+                }
+            }
         }
     });
-    document.getElementById("allStyleList").innerHTML=listHtml;
+
+    // 跳转到结果页
     goPage(3);
 }
 </script>
