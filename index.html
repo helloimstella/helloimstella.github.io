@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>遇事心态自测</title>
-<!-- 图表依赖 -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- 撒花动画依赖 -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <style>
@@ -232,30 +230,6 @@
     }
     .total-desc::before{content:"📊";font-size:18px;}
 
-    /* 雷达图区块 */
-    .radar-container{
-        background:#f9f5ff;
-        padding:25px;
-        border-radius:18px;
-        margin:30px 0;
-        text-align:center;
-    }
-    .radar-container h3{
-        color:#804fc1;
-        margin-bottom:20px;
-        font-size:18px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        gap:8px;
-    }
-    .radar-container h3::before{content:"🎯";}
-    #radarChart{
-        max-width:100%;
-        height:400px;
-        margin:0 auto;
-    }
-
     /* 专属解读区块 */
     .rich-desc{
         background:#f8f4ff;
@@ -364,12 +338,6 @@
         <div class="data-row">
             <div class="dim"><strong>积极性策略总分：</strong><span id="posScore"></span></div>
             <div class="dim"><strong>消极性策略总分：</strong><span id="negScore"></span></div>
-        </div>
-
-        <!-- 雷达图 -->
-        <div class="radar-container">
-            <h3>你的情绪调节维度总览</h3>
-            <canvas id="radarChart"></canvas>
         </div>
 
         <!-- 专属深度解读 -->
@@ -516,69 +484,6 @@ function submitAndShowResult(){
         `;
     });
     document.getElementById("allStyleList").innerHTML = listHtml;
-
-    // 销毁旧图表，新建雷达图
-    const ctx = document.getElementById('radarChart').getContext('2d');
-    if(window.radarChartInstance) window.radarChartInstance.destroy();
-    window.radarChartInstance = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: dimInfo.map(d=>d.name),
-            datasets: [{
-                label: '你的得分（满分10分）',
-                data: dimInfo.map(d=>d.score),
-                backgroundColor: 'rgba(128, 79, 193, 0.25)',
-                borderColor: 'rgba(128, 79, 193, 1)',
-                borderWidth: 2,
-                pointBackgroundColor: '#804fc1',
-                pointRadius: 5
-            },{
-                label: '大众平均水平',
-                data: Array(9).fill(5),
-                backgroundColor: 'rgba(160, 160, 160, 0.1)',
-                borderColor: 'rgba(160, 160, 160, 0.6)',
-                borderWidth: 1.5,
-                pointBackgroundColor: '#999',
-                pointRadius: 3,
-                borderDash: [6,6]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                r: {
-                    angleLines: {color: 'rgba(0,0,0,0.12)'},
-                    grid: {color: 'rgba(0,0,0,0.12)'},
-                    pointLabels: {
-                        font: {size: 12, family: "微软雅黑"},
-                        color: '#333'
-                    },
-                    ticks: {
-                        stepSize: 2,
-                        max: 10,
-                        min: 0,
-                        color: '#666',
-                        backdropColor: 'transparent'
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {font: {family: "微软雅黑", size: 13}}
-                },
-                tooltip: {
-                    bodyFont: {family: "微软雅黑"},
-                    callbacks: {
-                        label: function(context) {
-                            return `${context.dataset.label}：${context.raw} 分`;
-                        }
-                    }
-                }
-            }
-        }
-    });
 
     // 跳转页面 + 触发撒花动画
     goPage(3);
