@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>测测你应对事情的方式 | Test Your Coping Style</title>
+<title>测测你应对事情的方式</title>
 <style>
     *{box-sizing:border-box}
     body{
-        font-family:"微软雅黑",Arial,sans-serif;
+        font-family:"微软雅黑",sans-serif;
         margin:0;
         background:linear-gradient(120deg,#fef5ff,#e8f4ff);
         color:#333;
-        line-height:1.6;
+        line-height:1.8;
     }
     .page{
         display:none;
@@ -21,47 +21,59 @@
         margin:0 auto;
     }
     .page.active{display:block}
-
-    /* 通用双语排版 */
-    .cn{font-size:16px;color:#222;}
-    .en{font-size:14px;color:#666;margin-bottom:8px;}
-    .title-cn{font-size:28px;color:#804fc1;font-weight:bold;}
-    .title-en{font-size:16px;color:#804fc1;opacity:0.8;margin-bottom:20px;}
-
-    /* 引言页 */
     .intro-card{
         background:#fff;
         border-radius:20px;
-        padding:40px 30px;
+        padding:50px 30px;
         box-shadow:0 8px 20px #00000015;
         text-align:center;
+    }
+    .intro-card h1{
+        font-size:30px;
+        color:#804fc1;
+        margin-bottom:20px;
+    }
+    .intro-card p{
+        font-size:17px;
+        color:#555;
+        margin:12px 0;
     }
     .btn{
         background:#804fc1;
         color:white;
         border:none;
-        padding:14px 30px;
+        padding:15px 35px;
         border-radius:50px;
-        font-size:16px;
+        font-size:17px;
         cursor:pointer;
-        margin-top:25px;
-        transition: background 0.3s;
+        margin-top:30px;
+        transition:all 0.3s;
     }
-    .btn:hover{background:#6b3fa8}
-
-    /* 答题页 */
+    .btn:hover{
+        background:#6b3fa8;
+        transform:translateY(-2px);
+    }
     .q-card{
         background:white;
         border-radius:16px;
-        padding:20px;
-        margin-bottom:15px;
+        padding:22px;
+        margin-bottom:18px;
         box-shadow:0 4px 12px #00000010;
     }
-    .q-number{font-weight:bold;margin-right:6px;}
-    .opts{display:flex;justify-content:space-between;margin-top:12px;gap:4px;flex-wrap:wrap;}
+    .q-text{
+        font-size:16px;
+        color:#222;
+    }
+    .opts{
+        display:flex;
+        justify-content:space-between;
+        margin-top:15px;
+        gap:6px;
+        flex-wrap:wrap;
+    }
     .opts label{
         background:#f3f0ff;
-        padding:8px 10px;
+        padding:9px 12px;
         border-radius:8px;
         cursor:pointer;
         font-size:15px;
@@ -71,304 +83,214 @@
         background:#804fc1;
         color:white;
     }
-
-    /* 结果页 */
     .res-card{
         background:white;
         border-radius:20px;
-        padding:30px;
+        padding:35px;
         box-shadow:0 8px 20px #00000015;
     }
-    .res-title-cn{font-size:22px;color:#804fc1;font-weight:bold;}
-    .res-title-en{font-size:14px;color:#804fc1;margin-bottom:20px;}
+    .main-result{
+        background:linear-gradient(135deg,#804fc1,#a878e4);
+        color:#fff;
+        padding:25px;
+        border-radius:16px;
+        text-align:center;
+        margin-bottom:25px;
+    }
+    .main-title{font-size:18px;opacity:0.9}
+    .main-style{font-size:32px;font-weight:bold;margin:10px 0}
     .dim{
         background:#f9f5ff;
-        padding:14px;
-        border-radius:10px;
-        margin:10px 0;
+        padding:15px;
+        border-radius:12px;
+        margin:12px 0;
+        font-size:16px;
     }
     .hover-item{
         position:relative;
         background:#f3f0ff;
-        padding:12px 14px;
-        border-radius:10px;
-        margin:10px 0;
+        padding:14px 16px;
+        border-radius:12px;
+        margin:12px 0;
         cursor:pointer;
+        font-size:16px;
+        color:#333;
     }
     .hover-desc{
         display:none;
         position:absolute;
         left:105%;
         top:0;
-        width:300px;
-        background:#2c2c2c;
-        color:white;
-        padding:14px;
-        border-radius:8px;
+        width:320px;
+        background:#fff;
+        color:#333;
+        border:1px solid #eee;
+        padding:18px;
+        border-radius:12px;
         z-index:999;
-        box-shadow:0 4px 12px #00000025;
+        box-shadow:0 4px 20px rgba(0,0,0,0.15);
     }
     .hover-item:hover .hover-desc{display:block}
-    .data-log{
-        margin-top:25px;
-        font-size:12px;
-        color:#777;
-        padding-top:15px;
-        border-top:1px solid #eee;
+    h3{
+        color:#804fc1;
+        margin:30px 0 15px;
+        font-size:19px;
     }
-    hr{border:0;height:1px;background:#eee;margin:20px 0;}
+    hr{border:0;height:1px;background:#eee;margin:25px 0}
+    .rich-desc{
+        background:#f8f4ff;
+        padding:20px;
+        border-radius:12px;
+        margin:20px 0;
+        line-height:1.9;
+    }
 </style>
 </head>
 <body>
 
-<!-- 页面1：引言页 Introduction -->
+<!-- 引言页 -->
 <div id="page1" class="page active">
     <div class="intro-card">
-        <div class="title-cn">✨ 测测你应对事情的方式 ✨</div>
-        <div class="title-en">✨ Test Your Personal Coping Style ✨</div>
-
-        <p class="cn">遇到压力、挫折或烦心事时，你习惯如何面对？</p>
-        <p class="en">How do you usually deal with pressure, setbacks and troubles?</p>
-
-        <p class="cn">这份小测试会分析你的情绪应对风格，帮你更加了解自己。</p>
-        <p class="en">This test analyzes your emotional coping style and helps you know yourself better.</p>
-
-        <p class="cn">共 18 题 | 预计用时 3 分钟 | 结果仅个人查看</p>
-        <p class="en">Total 18 questions | About 3 minutes | Results for personal use only</p>
-
-        <button class="btn" onclick="goPage(2)">开始测试 / Start Test →</button>
+        <h1>✨ 测测你应对事情的方式 ✨</h1>
+        <p>遇到压力、挫折或烦心事时，你习惯如何面对？</p>
+        <p>有的人越挫越勇，有的人容易内耗纠结。</p>
+        <p>这份测试将精准分析你的思维习惯与情绪应对风格。</p>
+        <p>共 18 题｜约 3 分钟完成｜结果仅供个人参考</p>
+        <button class="btn" onclick="goPage(2)">开始测试 →</button>
     </div>
 </div>
 
-<!-- 页面2：答题页 Questionnaire -->
+<!-- 答题页 -->
 <div id="page2" class="page">
-    <div class="title-cn">请根据真实情况选择</div>
-    <div class="title-en">Please choose based on your real thoughts</div>
-    <p class="en" style="margin-bottom:20px;">1=完全不符合 / Strongly Disagree &nbsp;&nbsp; 5=完全符合 / Strongly Agree</p>
-
+    <h2 style="color:#804fc1;text-align:center;">请根据你的真实想法作答</h2>
+    <p style="text-align:center;color:#666;margin-bottom:25px;">1=完全不符合  5=完全符合</p>
     <div id="questions"></div>
-    <button class="btn" onclick="calcResult()">提交并查看结果 / Submit & View Result</button>
+    <button class="btn" onclick="calcResult()">提交并查看结果</button>
 </div>
 
-<!-- 页面3：结果页 Result -->
+<!-- 结果页 -->
 <div id="page3" class="page">
     <div class="res-card">
-        <div class="res-title-cn">你的应对风格报告</div>
-        <div class="res-title-en">Your Personal Coping Report</div>
-
-        <div id="resultText"></div>
+        <div class="main-result">
+            <div class="main-title">你最惯用的情绪应对方式</div>
+            <div class="main-style" id="topStyleShow"></div>
+            <div id="mainTypeShow"></div>
+        </div>
+        <div class="dim"><strong>整体调节风格：</strong><span id="totalType"></span></div>
+        <div class="dim"><strong>积极性策略总分：</strong><span id="posScore"></span></div>
+        <div class="dim"><strong>消极性策略总分：</strong><span id="negScore"></span></div>
+        <div id="richExplain" class="rich-desc"></div>
         <hr>
-
-        <div class="cn" style="font-weight:bold;font-size:18px;">📌 九种应对风格说明（鼠标悬停查看详情）</div>
-        <div class="en">📌 Explanation of 9 Coping Styles (Hover to view details)</div>
-
-        <div class="hover-item">
-            <span class="cn">1. 自我责备型</span>
-            <span class="en">  1. Self-blame</span>
-            <div class="hover-desc">
-                <div class="cn">习惯将问题归咎于自己，容易产生自责与内疚。建议：客观看待问题，不要过度揽责。</div>
-                <div class="en">You tend to blame yourself and feel guilty. Suggestion: View things objectively and avoid excessive self-criticism.</div>
-            </div>
-        </div>
-        <div class="hover-item">
-            <span class="cn">2. 接纳型</span>
-            <span class="en">  2. Acceptance</span>
-            <div class="hover-desc">
-                <div class="cn">能够坦然接受现实，情绪状态更平稳。建议：继续保持，配合行动效果更佳。</div>
-                <div class="en">You accept reality calmly and keep stable mood. Suggestion: Keep this good habit and take positive actions.</div>
-            </div>
-        </div>
-        <div class="hover-item">
-            <span class="cn">3. 反刍型</span>
-            <span class="en">  3. Rumination</span>
-            <div class="hover-desc">
-                <div class="cn">反复回想不愉快的经历，容易陷入负面情绪。建议：主动转移注意力，避免钻牛角尖。</div>
-                <div class="en">You keep thinking about bad experiences. Suggestion: Shift your attention and stop overthinking.</div>
-            </div>
-        </div>
-        <div class="hover-item">
-            <span class="cn">4. 积极重聚焦型</span>
-            <span class="en">  4. Positive Refocusing</span>
-            <div class="hover-desc">
-                <div class="cn">主动回想开心的事，以此缓解负面情绪。建议：这是很好的调节方式，可搭配问题解决。</div>
-                <div class="en">You cheer yourself up with happy memories. Suggestion: Combine this method with practical solutions.</div>
-            </div>
-        </div>
-        <div class="hover-item">
-            <span class="cn">5. 聚焦计划型</span>
-            <span class="en">  5. Refocus on Planning</span>
-            <div class="hover-desc">
-                <div class="cn">冷静思考解决方案，专注处理问题。建议：非常健康的应对方式，坚持保持。</div>
-                <div class="en">You think calmly and focus on solving problems. Suggestion: This is a healthy style, keep it up.</div>
-            </div>
-        </div>
-        <div class="hover-item">
-            <span class="cn">6. 积极重评型</span>
-            <span class="en">  6. Positive Reappraisal</span>
-            <div class="hover-desc">
-                <div class="cn">从挫折中寻找成长与价值。建议：优秀的思维模式，继续保持。</div>
-                <div class="en">You find growth and meaning from setbacks. Suggestion: Keep this positive mindset.</div>
-            </div>
-        </div>
-        <div class="hover-item">
-            <span class="cn">7. 换位思考型</span>
-            <span class="en">  7. Putting into Perspective</span>
-            <div class="hover-desc">
-                <div class="cn">理性看待事情，心态更加豁达。建议：有助于情绪与人际关系稳定。</div>
-                <div class="en">You view things rationally and stay open-minded. Suggestion: Good for emotion and interpersonal relationships.</div>
-            </div>
-        </div>
-        <div class="hover-item">
-            <span class="cn">8. 灾难化型</span>
-            <span class="en">  8. Catastrophizing</span>
-            <div class="hover-desc">
-                <div class="cn">容易把事情过度悲观化，产生焦虑感。建议：理性评估后果，降低负面想象。</div>
-                <div class="en">You tend to over-pessimize and feel anxious. Suggestion: Evaluate results rationally.</div>
-            </div>
-        </div>
-        <div class="hover-item">
-            <span class="cn">9. 责备他人型</span>
-            <span class="en">  9. Blaming Others</span>
-            <div class="hover-desc">
-                <div class="cn">习惯将责任推给他人，易产生不满与抱怨。建议：学会自我反思，减少外归因。</div>
-                <div class="en">You tend to blame others and complain. Suggestion: Learn self-reflection.</div>
-            </div>
-        </div>
-
-        <div class="data-log">
-            <p class="cn">📊 数据已自动记录（按下 F12 → 控制台可导出全部答题数据）</p>
-            <p class="en">📊 Data saved (Press F12 → Console to export all data)</p>
-        </div>
+        <h3>其他应对方式（共九种）</h3>
+        <div id="allStyleList"></div>
     </div>
 </div>
 
 <script>
-// 题目内容 中英双语
 const items=[
-    {cn:"我认为自己应该对所发生的事负责。", en:"I feel that I am responsible for what has happened."},
-    {cn:"总体而言，我认为结果是由我造成的。", en:"Overall, I think I caused the result."},
-    {cn:"我认为自己必须接受既成的事实。", en:"I think I have to accept what has happened."},
-    {cn:"我认为自己必须接受当下的现状。", en:"I think I have to accept the current situation."},
-    {cn:"我常常思考过往经历中自己的感受。", en:"I often think about my feelings from past experiences."},
-    {cn:"过往经历中的思绪和感受常令我心事重重。", en:"I am troubled by thoughts and feelings from the past."},
-    {cn:"我会回想与当下无关的愉快往事。", en:"I think of happy things unrelated to the situation."},
-    {cn:"我会多想积极的事，而非眼前发生的事情。", en:"I focus on positive things instead of troubles."},
-    {cn:"我会思考如何改变现状。", en:"I think about how to change the situation."},
-    {cn:"我会思考最优的应对方案。", en:"I think about the best way to deal with things."},
-    {cn:"我认为可以从当下的状况中有所收获。", en:"I believe I can learn from this situation."},
-    {cn:"我认为事情的结果能让我变成更强的人。", en:"I believe this experience makes me stronger."},
-    {cn:"我反复回想我经历的事情有多么糟糕。", en:"I keep thinking how terrible my experience was."},
-    {cn:"我会不断思考当时的状况有多么糟糕。", en:"I keep thinking about how bad the situation was."},
-    {cn:"相较其他事，我认为这件事并不算糟糕。", en:"Compared with other things, this is not too bad."},
-    {cn:"我会告诉自己，生活中还有更不如意的事情。", en:"I tell myself there are harder things in life."},
-    {cn:"我认为他人应该对所发生的事情负责。", en:"I feel others are responsible for what happened."},
-    {cn:"总体而言，我认为结果是他人导致的。", en:"Overall, I think others caused the result."}
+    "我认为自己应该对所发生的事负责。",
+    "总体而言，我认为结果是由我造成的。",
+    "我认为自己必须接受既成的事实。",
+    "我认为自己必须接受当下的现状。",
+    "我常常思考过往经历中自己的感受。",
+    "过往经历中的思绪和感受常令我心事重重。",
+    "我会回想与当下无关的愉快往事。",
+    "我会多想积极的事，而非眼前发生的事情。",
+    "我会思考如何改变现状。",
+    "我会思考最优的应对方案。",
+    "我认为可以从当下的状况中有所收获。",
+    "我认为事情的结果能让我变成更强的人。",
+    "相较其他事，我认为这件事并不算糟糕。",
+    "我会告诉自己，生活中还有更不如意的事情。",
+    "我反复回想我经历的事情有多么糟糕。",
+    "会不断思考当时的状况有多么糟糕。",
+    "我认为他人应该对所发生的事情负责。",
+    "总体而言，我认为结果是他人导致的。"
 ];
 
-// 维度设置
-const dims=[
-    {nameCn:"自我责备", nameEn:"Self-blame", score:0, adapt:"消极性 / Negative"},
-    {nameCn:"接纳", nameEn:"Acceptance", score:0, adapt:"积极性 / Positive"},
-    {nameCn:"反刍", nameEn:"Rumination", score:0, adapt:"消极性 / Negative"},
-    {nameCn:"积极重聚焦", nameEn:"Positive Refocusing", score:0, adapt:"积极性 / Positive"},
-    {nameCn:"聚焦计划", nameEn:"Refocus on Planning", score:0, adapt:"积极性 / Positive"},
-    {nameCn:"积极重评", nameEn:"Positive Reappraisal", score:0, adapt:"积极性 / Positive"},
-    {nameCn:"换位思考", nameEn:"Putting into Perspective", score:0, adapt:"积极性 / Positive"},
-    {nameCn:"灾难化", nameEn:"Catastrophizing", score:0, adapt:"消极性 / Negative"},
-    {nameCn:"责备他人", nameEn:"Blaming Others", score:0, adapt:"消极性 / Negative"}
+const dimInfo = [
+    {
+        name:"自我责备",type:"消极性",
+        simple:"习惯将问题责任归于自己，容易内疚、自我怀疑。",
+        rich:"你的核心思维特点是高度自省、习惯性揽责。遇到不顺时，你第一反应是「是我不够好」，容易陷入内疚、内耗。你心地善良、责任心极强，但常常过度消耗自己。建议：学会区分责任，不必事事苛责自己。"
+    },{
+        name:"接纳",type:"积极性",
+        simple:"能够坦然接受现实，情绪稳定，不抗拒已发生的事。",
+        rich:"你情绪稳定性非常高，面对挫折能平静接受，不抗拒、不崩溃。你心态成熟、包容度高，遇事冷静不情绪化，是人群中最沉稳的人。建议：接纳现实后再多一点主动改变，生活会更从容。"
+    },{
+        name:"反刍",type:"消极性",
+        simple:"反复回想不愉快细节，容易钻牛角尖、陷入内耗。",
+        rich:"你心思细腻、共情力强，但容易反复回想痛苦瞬间，越想越难受。事情早已过去，你的情绪却停在原地，长期易焦虑压抑。建议：学会转移注意力，不要给情绪反复折磨你的机会。"
+    },{
+        name:"积极重聚焦",type:"积极性",
+        simple:"主动转移注意力，用开心事冲淡负面情绪。",
+        rich:"你拥有很强的自愈能力，心情不好时会主动寻找快乐，不钻牛角尖。你通透、乐观，擅长自我调节，是最会自救的类型。建议：继续保持，搭配解决问题的思维会更优秀。"
+    },{
+        name:"聚焦计划",type:"积极性",
+        simple:"冷静理性，优先思考解决方案，专注解决问题。",
+        rich:"你是理性实干型人格，遇到问题不抱怨、不内耗，第一时间思考怎么解决。你逻辑清晰、抗压能力强，靠谱又成熟。建议：继续保持，适当允许自己有情绪，不用永远硬撑。"
+    },{
+        name:"积极重评",type:"积极性",
+        simple:"从挫折中找成长、找意义，心态积极乐观。",
+        rich:"你拥有稀缺的成长型思维，能从坏事里看到收获与蜕变。你内心强大、越挫越勇，心态好、运势佳。建议：坚持这种思维，人生会越走越宽。"
+    },{
+        name:"换位思考",type:"积极性",
+        simple:"多角度看待事情，心态豁达，不易极端悲观。",
+        rich:"你心胸开阔、心态成熟，不会放大痛苦，懂得自我开导。你情绪弹性大、自愈快，比同龄人更通透稳定。建议：保持豁达，同时重视自己的感受。"
+    },{
+        name:"灾难化",type:"消极性",
+        simple:"把小事放大、过度悲观、想象最坏结果。",
+        rich:"你属于高焦虑、多虑型，遇到小事容易脑补最坏结局，自己吓自己。你缺乏安全感，常因小事心神不宁。建议：拒绝过度脑补，理性评估现实。"
+    },{
+        name:"责备他人",type:"消极性",
+        simple:"习惯归因外界与他人，容易抱怨、不满。",
+        rich:"你自尊心强，遇到问题习惯向外找原因，不易自卑，但易抱怨、觉得自己是受害者。建议：适当自我反思，减少抱怨，关注可控部分。"
+    }
 ];
 
-// 渲染双语题目
 const qEl=document.getElementById("questions");
-items.forEach((obj,i)=>{
+items.forEach((txt,i)=>{
     const card=document.createElement("div");
     card.className="q-card";
-    card.innerHTML=`
-        <div class="q-text">
-            <span class="q-number">${i+1}.</span>
-            <span class="cn">${obj.cn}</span><br>
-            <span class="en">${obj.en}</span>
-        </div>
-        <div class="opts">
-            ${[1,2,3,4,5].map(n=>`
-                <input type="radio" name="q${i}" value="${n}" id="q${i}${n}">
-                <label for="q${i}${n}">${n}</label>
-            `).join("")}
-        </div>
-    `;
+    card.innerHTML=`<div class="q-text">${i+1}. ${txt}</div><div class="opts">${[1,2,3,4,5].map(n=>`<input type="radio" name="q${i}" value="${n}" id="q${i}${n}"><label for="q${i}${n}">${n}</label>`).join("")}</div>`;
     qEl.appendChild(card);
 });
 
-// 页面跳转
 function goPage(n){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById("page"+n).classList.add("active");
 }
 
-// 计算结果
 function calcResult(){
     let totalPos=0,totalNeg=0;
-    dims.forEach(d=>d.score=0);
-
-    // 读取作答分数
+    dimInfo.forEach(d=>d.score=0);
     for(let i=0;i<18;i++){
         const v=document.querySelector(`input[name="q${i}"]:checked`)?.value;
-        if(!v)return alert("请完成所有题目 / Please finish all questions!");
-        const dIndex=Math.floor(i/2);
-        dims[dIndex].score+=parseInt(v);
+        if(!v)return alert("请完成所有题目！");
+        dimInfo[Math.floor(i/2)].score+=parseInt(v);
     }
-
-    // 计算总分
-    dims.forEach(d=>{
-        if(d.adapt.includes("Positive")) totalPos+=d.score;
-        else totalNeg+=d.score;
+    dimInfo.forEach(d=>d.type==="积极性"?totalPos+=d.score:totalNeg+=d.score);
+    const topDim=dimInfo.reduce((a,b)=>a.score>b.score?a:b);
+    const topIndex=dimInfo.findIndex(x=>x.name===topDim.name);
+    
+    document.getElementById("topStyleShow").innerText=topDim.name;
+    document.getElementById("mainTypeShow").innerText=topDim.type+"主导";
+    document.getElementById("totalType").innerText=totalPos>totalNeg?"积极性为主，情绪调节能力良好":"消极性为主，容易产生情绪内耗";
+    document.getElementById("posScore").innerText=totalPos;
+    document.getElementById("negScore").innerText=totalNeg;
+    document.getElementById("richExplain").innerHTML=`<strong>📝 专属深度解读</strong><br><br>${topDim.rich}`;
+    
+    let listHtml="";
+    dimInfo.forEach((item,idx)=>{
+        if(idx===topIndex){
+            listHtml+=`<div class="hover-item">${item.name}（${item.type}）<div style="background:#f8f4ff;padding:15px;border-radius:10px;margin-top:10px;">${item.rich}</div></div>`;
+        }else{
+            listHtml+=`<div class="hover-item">${item.name}（${item.type}）<div class="hover-desc">${item.simple}</div></div>`;
+        }
     });
-
-    // 找出主导风格
-    const topDim=dims.reduce((a,b)=>a.score>b.score?a:b);
-    const mainStyle = totalPos>totalNeg ? "积极性为主 / Mainly Positive" : "消极性为主 / Mainly Negative";
-    const suggestCn = totalPos>totalNeg 
-        ? "继续保持现有优势，可多强化规划能力，让行动更落地。"
-        : "建议多练习接纳与积极思考，减少过度纠结与悲观想法，稳定情绪。";
-    const suggestEn = totalPos>totalNeg 
-        ? "Keep your advantages and strengthen your planning ability."
-        : "Practice acceptance and positive thinking to keep mood stable.";
-
-    // 渲染双语结果
-    const resText=document.getElementById("resultText");
-    resText.innerHTML=`
-        <div class="dim">
-            <span class="cn"><strong>你最惯用的情绪调节方式：</strong>${topDim.nameCn}（${topDim.nameEn}）</span><br>
-        </div>
-        <div class="dim">
-            <span class="cn"><strong>整体调节风格：</strong>${mainStyle}</span>
-        </div>
-        <div class="dim">
-            <span class="cn"><strong>积极性策略总分：</strong>${totalPos}</span>
-        </div>
-        <div class="dim">
-            <span class="cn"><strong>消极性策略总分：</strong>${totalNeg}</span>
-        </div>
-        <hr>
-        <p class="cn"><strong>结果解读：</strong>你在「${topDim.nameCn}」上得分最高，这是你最常用的应对模式。整体风格偏向${totalPos>totalNeg?"积极":"消极"}。</p>
-        <p class="en">Interpretation: Your dominant coping style is ${topDim.nameEn}. Your overall style is ${totalPos>totalNeg?"positive":"negative"}.</p>
-        <p class="cn"><strong>小建议：</strong>${suggestCn}</p>
-        <p class="en"><strong>Suggestion:</strong> ${suggestEn}</p>
-    `;
-
-    // 控制台记录数据
-    const data={
-        各维度得分:dims.map(d=>({中文:d.nameCn,英文:d.nameEn,分数:d.score})),
-        积极性总分:totalPos,
-        消极性总分:totalNeg,
-        主导风格:topDim.nameCn
-    };
-    console.log("=== 答题数据 / Answer Data ===");
-    console.log(data);
-
+    document.getElementById("allStyleList").innerHTML=listHtml;
     goPage(3);
 }
 </script>
-
 </body>
 </html>
