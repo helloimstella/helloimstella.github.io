@@ -4,8 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>遇事心态自测</title>
-<!-- 引入雷达图依赖 -->
+<!-- 图表依赖 -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- 撒花动画依赖 -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     body{
@@ -24,7 +26,7 @@
     }
     .page.active{display:block}
 
-    /* 引言页样式 */
+    /* 引言页 */
     .intro-card{
         background:#fff;
         border-radius:24px;
@@ -136,7 +138,7 @@
         color:white;
     }
 
-    /* 结果页 */
+    /* 结果页整体样式 */
     .res-card{
         background:white;
         border-radius:24px;
@@ -144,7 +146,16 @@
         box-shadow:0 8px 30px rgba(0,0,0,0.08);
         margin-top:20px;
     }
-    /* 核心结果样式 */
+    .section-title{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-size:20px;
+        color:#804fc1;
+        margin:40px 0 20px;
+    }
+
+    /* 核心结果区块 */
     .main-result{
         background:linear-gradient(135deg,#804fc1,#a878e4);
         color:#fff;
@@ -153,6 +164,24 @@
         text-align:center;
         margin-bottom:30px;
         box-shadow:0 6px 20px rgba(128,79,193,0.2);
+        position:relative;
+        overflow:hidden;
+    }
+    .main-result::before{
+        content:"💫";
+        position:absolute;
+        top:15px;
+        left:20px;
+        font-size:28px;
+        opacity:0.6;
+    }
+    .main-result::after{
+        content:"💫";
+        position:absolute;
+        bottom:15px;
+        right:20px;
+        font-size:28px;
+        opacity:0.6;
     }
     .main-title{
         font-size:19px;
@@ -173,7 +202,37 @@
         margin-top:8px;
     }
 
-    /* 雷达图容器 */
+    /* 基础数据行 */
+    .data-row{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:15px;
+        margin:20px 0;
+    }
+    .dim{
+        background:#f9f5ff;
+        padding:18px;
+        border-radius:15px;
+        font-size:16px;
+        display:flex;
+        align-items:center;
+        gap:10px;
+    }
+    .dim:nth-child(1)::before{content:"📈";font-size:18px;}
+    .dim:nth-child(2)::before{content:"📉";font-size:18px;}
+    .total-desc{
+        background:#f9f5ff;
+        padding:18px;
+        border-radius:15px;
+        font-size:16px;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        margin:15px 0;
+    }
+    .total-desc::before{content:"📊";font-size:18px;}
+
+    /* 雷达图区块 */
     .radar-container{
         background:#f9f5ff;
         padding:25px;
@@ -185,29 +244,19 @@
         color:#804fc1;
         margin-bottom:20px;
         font-size:18px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
     }
+    .radar-container h3::before{content:"🎯";}
     #radarChart{
         max-width:100%;
         height:400px;
         margin:0 auto;
     }
 
-    .dim{
-        background:#f9f5ff;
-        padding:18px;
-        border-radius:15px;
-        margin:15px 0;
-        font-size:16px;
-        display:flex;
-        align-items:center;
-        gap:10px;
-    }
-    .dim::before{
-        content:"📊";
-        font-size:18px;
-    }
-
-    /* 丰富解读 */
+    /* 专属解读区块 */
     .rich-desc{
         background:#f8f4ff;
         padding:25px;
@@ -215,27 +264,20 @@
         margin:25px 0;
         line-height:1.9;
         border-left:4px solid #804fc1;
+        position:relative;
     }
     .rich-desc strong{
         color:#804fc1;
         font-size:18px;
         display:block;
         margin-bottom:15px;
-    }
-
-    /* 其他应对方式 */
-    .other-style-title{
-        color:#804fc1;
-        margin:40px 0 20px;
-        font-size:20px;
         display:flex;
         align-items:center;
         gap:8px;
     }
-    .other-style-title::before{
-        content:"📚";
-        font-size:18px;
-    }
+    .rich-desc strong::before{content:"💡";}
+
+    /* 其他应对方式列表 */
     .hover-item{
         position:relative;
         background:#f3f0ff;
@@ -246,9 +288,14 @@
         font-size:16px;
         color:#333;
         transition:all 0.2s;
+        display:flex;
+        align-items:center;
+        gap:10px;
     }
+    .hover-item::before{content:"🔹";font-size:16px;}
     .hover-item:hover{
         box-shadow:0 4px 15px rgba(0,0,0,0.05);
+        transform:translateX(4px);
     }
     .hover-desc{
         display:none;
@@ -297,7 +344,7 @@
         <p>1=完全不符合  2=比较不符合  3=一般  4=比较符合  5=完全符合</p>
     </div>
     <div id="questions"></div>
-    <button class="btn" onclick="calcResult()">提交并查看结果</button>
+    <button class="btn" onclick="submitAndShowResult()">提交并查看结果</button>
 </div>
 
 <!-- 页面3：结果页 -->
@@ -310,10 +357,14 @@
             <div class="main-tag" id="mainTypeShow"></div>
         </div>
 
-        <!-- 基础数据 -->
-        <div class="dim"><strong>整体调节风格：</strong><span id="totalType"></span></div>
-        <div class="dim"><strong>积极性策略总分：</strong><span id="posScore"></span></div>
-        <div class="dim"><strong>消极性策略总分：</strong><span id="negScore"></span></div>
+        <!-- 整体风格 & 分数 -->
+        <div class="total-desc">
+            <strong>整体调节风格：</strong><span id="totalType"></span>
+        </div>
+        <div class="data-row">
+            <div class="dim"><strong>积极性策略总分：</strong><span id="posScore"></span></div>
+            <div class="dim"><strong>消极性策略总分：</strong><span id="negScore"></span></div>
+        </div>
 
         <!-- 雷达图 -->
         <div class="radar-container">
@@ -321,13 +372,13 @@
             <canvas id="radarChart"></canvas>
         </div>
 
-        <!-- 专属丰富解读 -->
+        <!-- 专属深度解读 -->
         <div id="richExplain" class="rich-desc"></div>
 
         <hr>
 
         <!-- 其他应对方式 -->
-        <h3 class="other-style-title">其他应对方式（共九种）</h3>
+        <h3 class="section-title">📚 其他应对方式（共九种）</h3>
         <div id="allStyleList"></div>
     </div>
 </div>
@@ -355,7 +406,7 @@ const items=[
     "总体而言，我认为结果是他人导致的。"
 ];
 
-// 维度信息（严格区分：专属解读=丰富版，其他应对里的接纳=简单版）
+// 维度信息
 const dimInfo = [
     {
         name:"自我责备",type:"消极性",
@@ -413,19 +464,18 @@ items.forEach((txt,i)=>{
     qEl.appendChild(card);
 });
 
-// 页面跳转
+// 基础页面跳转
 function goPage(n){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById("page"+n).classList.add("active");
 }
 
-// 计算结果 + 生成雷达图
-function calcResult(){
+// 提交答题 + 触发撒花 + 计算结果
+function submitAndShowResult(){
     let totalPos=0,totalNeg=0;
-    // 初始化分数
     dimInfo.forEach(d=>d.score=0);
 
-    // 读取每题分数
+    // 读取答题分数
     for(let i=0;i<18;i++){
         const v=document.querySelector(`input[name="q${i}"]:checked`)?.value;
         if(!v)return alert("请完成所有题目！");
@@ -439,27 +489,25 @@ function calcResult(){
         else totalNeg+=d.score;
     });
 
-    // 找到最高分主导风格
+    // 找到主导风格
     const topDim=dimInfo.reduce((a,b)=>a.score>b.score?a:b);
     const topIndex = dimInfo.findIndex(x=>x.name===topDim.name);
 
-    // 填充顶部重点结果
+    // 填充页面数据
     document.getElementById("topStyleShow").innerText = topDim.name;
     document.getElementById("mainTypeShow").innerText = topDim.type+"主导";
-
-    // 总分展示
     document.getElementById("totalType").innerText = totalPos>totalNeg 
         ? "积极性为主，情绪调节能力良好，抗压能力强" 
         : "消极性为主，容易产生情绪内耗，需注意调节";
     document.getElementById("posScore").innerText = totalPos;
     document.getElementById("negScore").innerText = totalNeg;
 
-    // 专属丰富解读（只显示接纳的丰富版）
-    document.getElementById("richExplain").innerHTML = `<strong>📝 专属深度解读</strong>${topDim.rich}`;
+    // 专属深度解读（丰富版）
+    document.getElementById("richExplain").innerHTML = `<strong>专属深度解读</strong>${topDim.rich}`;
 
-    // 渲染所有其他风格：所有都显示简单版（包括接纳）
+    // 其他方式统一显示简易版
     let listHtml = "";
-    dimInfo.forEach((item,idx)=>{
+    dimInfo.forEach(item=>{
         listHtml += `
         <div class="hover-item">
             ${item.name}（${item.type}）
@@ -469,11 +517,9 @@ function calcResult(){
     });
     document.getElementById("allStyleList").innerHTML = listHtml;
 
-    // 生成雷达图（参考MBTI测试的视觉效果）
+    // 销毁旧图表，新建雷达图
     const ctx = document.getElementById('radarChart').getContext('2d');
-    // 销毁已有图表避免重复渲染
     if(window.radarChartInstance) window.radarChartInstance.destroy();
-    
     window.radarChartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
@@ -481,27 +527,29 @@ function calcResult(){
             datasets: [{
                 label: '你的得分（满分10分）',
                 data: dimInfo.map(d=>d.score),
-                backgroundColor: 'rgba(128, 79, 193, 0.2)',
+                backgroundColor: 'rgba(128, 79, 193, 0.25)',
                 borderColor: 'rgba(128, 79, 193, 1)',
                 borderWidth: 2,
                 pointBackgroundColor: '#804fc1',
-                pointRadius: 4
+                pointRadius: 5
             },{
-                label: '平均水平',
+                label: '大众平均水平',
                 data: Array(9).fill(5),
-                backgroundColor: 'rgba(150, 150, 150, 0.1)',
-                borderColor: 'rgba(150, 150, 150, 0.5)',
-                borderWidth: 1,
+                backgroundColor: 'rgba(160, 160, 160, 0.1)',
+                borderColor: 'rgba(160, 160, 160, 0.6)',
+                borderWidth: 1.5,
                 pointBackgroundColor: '#999',
-                pointRadius: 2,
-                borderDash: [5,5]
+                pointRadius: 3,
+                borderDash: [6,6]
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 r: {
-                    angleLines: {color: 'rgba(0,0,0,0.1)'},
-                    grid: {color: 'rgba(0,0,0,0.1)'},
+                    angleLines: {color: 'rgba(0,0,0,0.12)'},
+                    grid: {color: 'rgba(0,0,0,0.12)'},
                     pointLabels: {
                         font: {size: 12, family: "微软雅黑"},
                         color: '#333'
@@ -510,21 +558,21 @@ function calcResult(){
                         stepSize: 2,
                         max: 10,
                         min: 0,
-                        color: '#666'
+                        color: '#666',
+                        backdropColor: 'transparent'
                     }
                 }
             },
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: {
-                        font: {family: "微软雅黑"}
-                    }
+                    labels: {font: {family: "微软雅黑", size: 13}}
                 },
                 tooltip: {
+                    bodyFont: {family: "微软雅黑"},
                     callbacks: {
                         label: function(context) {
-                            return context.dataset.label + ': ' + context.raw + '分';
+                            return `${context.dataset.label}：${context.raw} 分`;
                         }
                     }
                 }
@@ -532,8 +580,14 @@ function calcResult(){
         }
     });
 
-    // 跳转到结果页
+    // 跳转页面 + 触发撒花动画
     goPage(3);
+    confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.3 },
+        colors: ['#804fc1','#a878e4','#fef5ff']
+    });
 }
 </script>
 </body>
